@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://traceforge.local/schema/trace-session.schema.json",
+  "title": "TraceForge Session",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "source",
+    "metadata",
+    "events"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": ["format", "origin", "fixture", "notes", "ingestedAt"],
+      "properties": {
+        "format": { "type": "string" },
+        "origin": { "type": "string" },
+        "fixture": { "type": "boolean" },
+        "notes": { "type": "string" },
+        "ingestedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "trace-event.schema.json"
+      }
+    }
+  }
+}
+

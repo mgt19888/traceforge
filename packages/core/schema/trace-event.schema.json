@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://traceforge.local/schema/trace-event.schema.json",
+  "title": "TraceForge Event",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "sessionId",
+    "timestamp",
+    "kind",
+    "actor",
+    "summary",
+    "tags",
+    "data"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kind": {
+      "enum": [
+        "prompt",
+        "command",
+        "tool",
+        "file_edit",
+        "patch",
+        "test",
+        "error",
+        "outcome"
+      ]
+    },
+    "actor": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "data": {
+      "oneOf": [
+        { "$ref": "#/$defs/promptData" },
+        { "$ref": "#/$defs/commandData" },
+        { "$ref": "#/$defs/toolData" },
+        { "$ref": "#/$defs/fileEditData" },
+        { "$ref": "#/$defs/patchData" },
+        { "$ref": "#/$defs/testData" },
+        { "$ref": "#/$defs/errorData" },
+        { "$ref": "#/$defs/outcomeData" }
+      ]
+    }
+  },
+  "$defs": {
+    "promptData": {
+      "type": "object",
+      "required": ["role", "content"],
+      "properties": {
+        "role": {
+          "enum": ["user", "assistant", "system"]
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "commandData": {
+      "type": "object",
+      "required": ["command", "status"],
+      "properties": {
+        "command": { "type": "string" },
+        "cwd": { "type": "string" },
+        "status": {
+          "enum": ["planned", "running", "passed", "failed", "skipped"]
+        },
+        "exitCode": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "toolData": {
+      "type": "object",
+      "required": ["toolName", "status"],
+      "properties": {
+        "toolName": { "type": "string" },
+        "status": {
+          "enum": ["requested", "running", "succeeded", "failed"]
+        },
+        "inputSummary": { "type": "string" },
+        "outputSummary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "fileEditData": {
+      "type": "object",
+      "required": ["path", "changeType"],
+      "properties": {
+        "path": { "type": "string" },
+        "changeType": {
+          "enum": ["create", "update", "delete", "rename"]
+        },
+        "language": { "type": "string" },
+        "linesAdded": { "type": "number" },
+        "linesRemoved": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "patchData": {
+      "type": "object",
+      "required": ["target", "format", "diffSummary"],
+      "properties": {
+        "target": { "type": "string" },
+        "format": {
+          "enum": ["unified", "structured"]
+        },
+        "diffSummary": { "type": "string" },
+        "hunks": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "testData": {
+      "type": "object",
+      "required": ["command", "status"],
+      "properties": {
+        "command": { "type": "string" },
+        "status": {
+          "enum": ["passed", "failed", "skipped"]
+        },
+        "passed": { "type": "number" },
+        "failed": { "type": "number" },
+        "durationMs": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "errorData": {
+      "type": "object",
+      "required": ["message", "severity"],
+      "properties": {
+        "message": { "type": "string" },
+        "severity": {
+          "enum": ["info", "warning", "error", "fatal"]
+        },
+        "source": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "outcomeData": {
+      "type": "object",
+      "required": ["status", "summary"],
+      "properties": {
+        "status": {
+          "enum": ["partial", "success", "failed"]
+        },
+        "summary": { "type": "string" },
+        "artifactRefs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
+

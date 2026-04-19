@@ -1,0 +1,13 @@
+node_modules/
+.openclaw/
+memory/
+AGENTS.md
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
+SOP.md
+artifacts/*.json
+!.gitkeep
+

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TraceForge</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">TraceForge</p>
+          <h1>Session Replay Console</h1>
+          <p id="session-meta" class="muted">Loading normalized trace session…</p>
+        </div>
+      </header>
+
+      <section>
+        <div id="summary-cards" class="card-grid"></div>
+      </section>
+
+      <section>
+        <div id="filters" class="filters"></div>
+      </section>
+
+      <section class="main-grid">
+        <div class="stack">
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Replay</p>
+                <h2>Key checkpoints</h2>
+              </div>
+            </div>
+            <div id="replay-strip" class="stack compact"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Timeline</p>
+                <h2>Normalized events</h2>
+              </div>
+            </div>
+            <div id="timeline" class="timeline"></div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Commands</p>
+                <h2>Shell activity</h2>
+              </div>
+            </div>
+            <div id="command-pane" class="stack compact"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Tests</p>
+                <h2>Validation runs</h2>
+              </div>
+            </div>
+            <div id="test-pane" class="stack compact"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Diffs</p>
+                <h2>File and patch activity</h2>
+              </div>
+            </div>
+            <div id="diff-pane" class="stack compact"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Observability</p>
+                <h2>Issues and artifacts</h2>
+              </div>
+            </div>
+            <div id="issues-pane" class="stack compact"></div>
+            <div id="artifact-pane" class="artifact-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
