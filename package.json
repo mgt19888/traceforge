@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "test": "node --test packages/importer/src/index.test.mjs",
     "traceforge": "node packages/cli/src/main.js",
     "traceforge:ingest": "node packages/cli/src/main.js ingest fixtures/codex-session.json artifacts/latest-session.json",
     "traceforge:validate-fixtures": "node scripts/validate-fixtures.mjs",
