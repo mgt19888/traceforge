@@ -26,11 +26,23 @@ The JSON schemas live in `packages/core/schema/trace-event.schema.json` and `pac
 
 ## Current ingest flow
 
-1. Importer reads NDJSON, generic JSON, or a Codex-shaped session document.
+1. Importer reads NDJSON, generic JSON, Codex-shaped session documents, or Claude Code-shaped transcript documents.
 2. The Codex adapter maps `steps` such as prompts, commands, plan updates, patches, and tests into the stable event model.
-3. Core normalizes missing IDs/session IDs, sorts events by timestamp, validates the result, and derives replay/observability indexes.
-4. CLI writes normalized artifacts and/or serves them through `/api/session` and `/api/observability`.
-5. UI renders the timeline plus command/test/diff/issues panes from the same normalized payload.
+3. The Claude Code adapter maps role/content transcripts plus `tool_use`/`tool_result` pairs and explicit patch/test/outcome records into the same event model.
+4. Core normalizes missing IDs/session IDs, sorts events by timestamp, validates the result, and derives replay/observability indexes.
+5. CLI writes normalized artifacts and/or serves them through `/api/session` and `/api/observability`.
+6. UI renders the timeline plus command/test/diff/issues panes from the same normalized payload.
+
+## Adapter boundaries
+
+- `packages/importer/src/adapters/codex.js`: handles Codex session documents with `steps` and Codex-style raw step arrays.
+- `packages/importer/src/adapters/claude-code.js`: handles Claude Code session documents with `transcript`/`messages`/`entries` and Claude-style record arrays.
+- Both adapters emit the same TraceForge event kinds so the rest of the stack stays format-agnostic.
+
+## Current Claude Code limitations
+
+- Supported today: JSON transcript exports, record arrays, text blocks, `tool_use`/`tool_result` pairs, and explicit `file_edit`, `apply_patch`, `test_result`, `error`, and `outcome` entries.
+- Not supported yet: raw streaming delta logs, local Claude Code state directories, or full artifact body persistence for stdout/stderr/patch payloads.
 
 ## Replay and observability data
 
@@ -45,7 +57,7 @@ The core layer now derives a reusable observability object alongside the simple 
 
 ## Immediate next steps
 
-1. Replace the synthetic Codex fixture with a captured real session export once a stable upstream format exists.
+1. Replace the synthetic fixtures with captured real Codex and Claude Code exports once the upstream formats stabilize.
 2. Persist larger artifacts such as raw command stdout, patch blobs, screenshots, and screenshots manifests alongside the session.
 3. Add richer validation and indexing, likely via SQLite or DuckDB for multi-session search.
 4. Add deep linking between timeline events and command/test/diff panes.

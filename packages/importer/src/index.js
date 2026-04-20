@@ -6,6 +6,12 @@ import {
   validateTraceSession,
 } from '../../core/src/index.js';
 import {
+  importClaudeCodeEntryRecords,
+  importClaudeCodeSessionDocument,
+  isClaudeCodeRecordList,
+  isClaudeCodeSessionDocument,
+} from './adapters/claude-code.js';
+import {
   importCodexSessionDocument,
   importCodexStepRecords,
   isCodexSessionDocument,
@@ -62,12 +68,20 @@ function resolveSessionFromRecords(records, sourcePath, format) {
     return importCodexStepRecords(records, sourcePath);
   }
 
+  if (isClaudeCodeRecordList(records)) {
+    return importClaudeCodeEntryRecords(records, sourcePath);
+  }
+
   return wrapEvents(records, sourcePath, format);
 }
 
 function resolveSessionFromJson(parsed, sourcePath) {
   if (isCodexSessionDocument(parsed)) {
     return importCodexSessionDocument(parsed, sourcePath);
+  }
+
+  if (isClaudeCodeSessionDocument(parsed)) {
+    return importClaudeCodeSessionDocument(parsed, sourcePath);
   }
 
   if (Array.isArray(parsed)) {
